@@ -11,7 +11,7 @@ public class User {
     private String phone;
     private String email;
     private boolean covered;
-    private String distORprice;
+    private int distORprice;
 
     public String getUsername() {
         return username;
@@ -61,11 +61,11 @@ public class User {
         this.covered = covered;
     }
 
-    public String getDistORprice() {
+    public int getDistORprice() {
         return distORprice;
     }
 
-    public void setDistORprice(String distORprice) {
+    public void setDistORprice(int distORprice) {
         this.distORprice = distORprice;
     }
 
@@ -78,7 +78,7 @@ public class User {
         sb.append("phone: " + this.getPhone() + "\n");
         sb.append("email: " + this.getEmail() + "\n");
         sb.append("covered: " + this.isCovered() + "\n");
-        sb.append(getDistORprice().equals("distance") ? "prefers distance over price\n" : "prefers price over distance\n");
+        sb.append("Distance/Price (1-10 scale): " + this.getDistORprice() + "\n");
         return sb.toString();
     }
 }
