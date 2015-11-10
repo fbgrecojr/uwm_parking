@@ -49,7 +49,7 @@ public class JSONParser {
                 }
 
                 if(exists){
-                    lotList.get(index).getSpaces().add(new Space(obj.getInt("spaceNumber"), lotList.get(index).getName(), obj.getString("available").equals("1") ? true : false, obj.getString("expired")));
+                    lotList.get(index).getSpaces().add(new Space(obj.getInt("spaceNumber"), lotList.get(index).getName(), obj.getString("available").equals("1") ? true : false, obj.getString("expired"), obj.getBoolean("handicap"), obj.getBoolean("elecctric")));
                 }else{
                     Location curLoc = new Location();
                     curLot.setName(obj.getString("lotName"));
@@ -62,7 +62,7 @@ public class JSONParser {
                     String keywords = obj.getString("keywords");
                     List<String> keys = Arrays.asList(keywords.split("\\s*,\\s*"));
                     curLot.setKeywords(keys);
-                    curLot.getSpaces().add(new Space(obj.getInt("spaceNumber"), curLot.getName(), obj.getString("available").equals("1") ? true : false, obj.getString("expired")));
+                    curLot.getSpaces().add(new Space(obj.getInt("spaceNumber"), curLot.getName(), obj.getString("available").equals("1") ? true : false, obj.getString("expired"), obj.getBoolean("handicap"), obj.getBoolean("elecctric")));
                     curLot.setCovered(obj.getBoolean("covered"));
 
                     lotList.add(curLot);

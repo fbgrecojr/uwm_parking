@@ -10,12 +10,16 @@ public class Space {
     private String lot;
     private boolean available;
     private String expired;
+    private boolean handicap;
+    private boolean electric;
 
-    public Space(int number, String lot, boolean available, String expired){
+    public Space(int number, String lot, boolean available, String expired, boolean handicap, boolean electric){
         this.number = number;
         this.lot = lot;
         this.available = available;
         this.expired = expired;
+        this.handicap = handicap;
+        this.electric = electric;
     }
 
     public int getNumber() {
@@ -50,12 +54,30 @@ public class Space {
         this.expired = expired;
     }
 
+    public boolean isHandicap() {
+        return handicap;
+    }
+
+    public void setHandicap(boolean handicap) {
+        this.handicap = handicap;
+    }
+
+    public boolean isElectric() {
+        return electric;
+    }
+
+    public void setElectric(boolean electric) {
+        this.electric = electric;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Space#" + this.getNumber() + "\n");
         sb.append("Available: " + this.isAvailable() + "\n");
         sb.append("Expired: " + this.getExpired() + "\n");
+        sb.append("Handicap: " + this.isHandicap() + "\n");
+        sb.append("Electric: " + this.isElectric() + "\n");
         return sb.toString();
     }
 }
