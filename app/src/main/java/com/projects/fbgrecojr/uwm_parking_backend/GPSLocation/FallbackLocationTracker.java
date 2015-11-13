@@ -88,7 +88,7 @@ public class FallbackLocationTracker  implements LocationTracker, LocationTracke
         else if(newLoc.getProvider().equals(LocationManager.GPS_PROVIDER)){
             update = true;
         }
-        else if (newTime - lastTime > 5 * 60 * 1000){
+        else if (newTime - lastTime > 5 * 5 * 1000){
             update = true;
         }
 

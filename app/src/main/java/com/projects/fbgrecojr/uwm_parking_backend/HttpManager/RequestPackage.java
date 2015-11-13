@@ -1,4 +1,4 @@
-package com.projects.fbgrecojr.uwm_parking_backend.Main;
+package com.projects.fbgrecojr.uwm_parking_backend.HttpManager;
 
 import java.net.URLEncoder;
 import java.util.HashMap;

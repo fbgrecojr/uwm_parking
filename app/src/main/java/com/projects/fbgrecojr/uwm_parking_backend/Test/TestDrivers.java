@@ -1,6 +1,6 @@
 package com.projects.fbgrecojr.uwm_parking_backend.Test;
 
-import com.projects.fbgrecojr.uwm_parking_backend.Structures.Location;
+import com.projects.fbgrecojr.uwm_parking_backend.Archive.Location;
 
 /**
  * Created by fbgrecojr on 11/7/15.

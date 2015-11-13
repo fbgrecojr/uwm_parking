@@ -1,4 +1,4 @@
-package com.projects.fbgrecojr.uwm_parking_backend.Structures;
+package com.projects.fbgrecojr.uwm_parking_backend.Archive;
 
 /**
  * Created by fbgrecojr on 11/7/15.

@@ -9,7 +9,7 @@ import java.util.List;
 public class Lot {
 
     private String name;
-    private Location location;
+    private android.location.Location location;
     private int numSpaces;
     private double rate;
     private int maxTime;
@@ -33,11 +33,11 @@ public class Lot {
         this.name = name;
     }
 
-    public Location getLocation() {
+    public android.location.Location getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(android.location.Location location) {
         this.location = location;
     }
 
@@ -86,8 +86,7 @@ public class Lot {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Name: " + this.getName() + "\n");
-        sb.append("Location: " + this.getLocation().toString() + "\n");
-        sb.append("Number of Spaces: " + this.getNumSpaces() + "\n");
+        sb.append("Location: " + "[" + this.getLocation().getLatitude() + ", " + this.getLocation().getLongitude() + "]\n");        sb.append("Number of Spaces: " + this.getNumSpaces() + "\n");
         sb.append("Rate: " + this.getRate() + "\n");
         sb.append("Max Time: " + this.getMaxTime() + "\n");
         sb.append("Keywords: " + this.getKeywords() + "\n");

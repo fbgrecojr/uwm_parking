@@ -6,22 +6,20 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import java.security.Security;
-
 public class ProviderLocationTracker implements LocationListener, LocationTracker {
 
     // The minimum distance to change Updates in meters
     private static final long MIN_UPDATE_DISTANCE = 10;
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_UPDATE_TIME = 1000 * 60;
+    private static final long MIN_UPDATE_TIME = 1000 * 5;
 
     private LocationManager lm;
 
     public enum ProviderType{
         NETWORK,
         GPS
-    };
+    }
     private String provider;
 
     private Location lastLocation;
@@ -53,6 +51,7 @@ public class ProviderLocationTracker implements LocationListener, LocationTracke
             lm.requestLocationUpdates(provider, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, this);
         }catch (SecurityException e){
             //do something
+            e.printStackTrace();
         }
         lastLocation = null;
         lastTime = 0;
@@ -72,6 +71,7 @@ public class ProviderLocationTracker implements LocationListener, LocationTracke
                 lm.removeUpdates(this);
             }catch (SecurityException e){
                 //do something
+                e.printStackTrace();
             }
             isRunning = false;
             listener = null;

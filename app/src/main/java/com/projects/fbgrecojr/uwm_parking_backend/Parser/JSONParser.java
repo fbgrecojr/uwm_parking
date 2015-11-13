@@ -1,7 +1,6 @@
 package com.projects.fbgrecojr.uwm_parking_backend.Parser;
 
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.Building;
-import com.projects.fbgrecojr.uwm_parking_backend.Structures.Location;
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.LogItem;
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.Lot;
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.Space;
@@ -51,7 +50,7 @@ public class JSONParser {
                 if(exists){
                     lotList.get(index).getSpaces().add(new Space(obj.getInt("spaceNumber"), lotList.get(index).getName(), obj.getString("available").equals("1") ? true : false, obj.getString("expired"), obj.getBoolean("handicap"), obj.getBoolean("electric")));
                 }else{
-                    Location curLoc = new Location();
+                    android.location.Location curLoc = new android.location.Location("");
                     curLot.setName(obj.getString("lotName"));
                     curLoc.setLatitude(obj.getDouble("latitude"));
                     curLoc.setLongitude(obj.getDouble("longitude"));
@@ -153,7 +152,7 @@ public class JSONParser {
             for(int i = 0; i < arr.length(); ++i){
                 JSONObject obj = arr.getJSONObject(i);
                 Building curItem = new Building();
-                Location curLoc = new Location();
+                android.location.Location curLoc = new android.location.Location("");
 
                 curItem.setName(obj.getString("name"));
                 curLoc.setLatitude(obj.getDouble("latitude"));

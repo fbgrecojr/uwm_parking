@@ -2,6 +2,7 @@ package com.projects.fbgrecojr.uwm_parking_backend.Main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -12,7 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.projects.fbgrecojr.uwm_parking_backend.GPSLocation.LocationTracker;
+import com.projects.fbgrecojr.uwm_parking_backend.GPSLocation.ProviderLocationTracker;
 import com.projects.fbgrecojr.uwm_parking_backend.HttpManager.HttpManager;
+import com.projects.fbgrecojr.uwm_parking_backend.HttpManager.RequestPackage;
 import com.projects.fbgrecojr.uwm_parking_backend.Parser.JSONParser;
 import com.projects.fbgrecojr.uwm_parking_backend.R;
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.Building;
@@ -38,12 +42,18 @@ public class MainActivity extends AppCompatActivity {
     private static List<Building> currentBuildings = new ArrayList<>();
     //create a Progress Dialog to be used throughout Activity
     private ProgressDialog p;
+    //URL
     public static String uri = "http://ec2-54-152-4-103.compute-1.amazonaws.com/scripts.php";
+    //location
+    ProviderLocationTracker tracker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tracker = new ProviderLocationTracker(MainActivity.this, ProviderLocationTracker.ProviderType.GPS);
 
         one = (Button) findViewById(R.id.button0);
         two = (Button) findViewById(R.id.button1);
@@ -56,6 +66,19 @@ public class MainActivity extends AppCompatActivity {
         one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Location l;
+                if(tracker.hasLocation()){
+                    l = tracker.getLocation();
+                    clearScreen();
+                    updateDisplay("[" + String.valueOf(l.getLatitude()) + ", " + String.valueOf(l.getLongitude()) + "]");
+                }else if(tracker.hasPossiblyStaleLocation()){
+                    l = tracker.getPossiblyStaleLocation();
+                    clearScreen();
+                    updateDisplay("[" + String.valueOf(l.getLatitude()) + ", " + String.valueOf(l.getLongitude()) + "]");
+                }else{
+                    clearScreen();
+                    updateDisplay("tracker is null");
+                }*/
                 if(isOnline()){
                     screen.setText("");
                     //*****FOR EACH CALL TO THE WEBSERVICE, THIS OVERHEAD MUST BE DONE*****
@@ -170,6 +193,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tracker.start(new LocationTracker.LocationUpdateListener() {
+            @Override
+            public void onUpdate(Location oldLoc, long oldTime, Location newLoc, long newTime) {
+                updateDisplay( tracker.hasLocation() ? ("old: [" + oldLoc.getLatitude() + ", " + oldLoc.getLongitude() + "]") : "no previous location");
+                updateDisplay("new: [" + newLoc.getLatitude() + ", " + newLoc.getLongitude() + "]");
+            }
+        });
+
     }
 
     public int formatDay(String day){
@@ -212,6 +243,9 @@ public class MainActivity extends AppCompatActivity {
     public void updateDisplay(String append) {
         screen.setText(screen.getText() + append + "\n");
     }
+
+    public void clearScreen(){ screen.setText(""); }
+
 
     /**
      * Check to see whether there is an internet connection or not.

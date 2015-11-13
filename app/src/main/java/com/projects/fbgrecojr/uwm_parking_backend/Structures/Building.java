@@ -6,7 +6,7 @@ package com.projects.fbgrecojr.uwm_parking_backend.Structures;
 public class Building {
 
     private String name;
-    private Location location;
+    private android.location.Location location;
 
     public String getName() {
         return name;
@@ -16,11 +16,11 @@ public class Building {
         this.name = name;
     }
 
-    public Location getLocation() {
+    public android.location.Location getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(android.location.Location location) {
         this.location = location;
     }
 
@@ -28,7 +28,7 @@ public class Building {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Name: " + this.getName() + "\n");
-        sb.append("Location: " + this.getLocation().toString() + "\n");
+        sb.append("Location: " + "[" + this.getLocation().getLatitude() + ", " + this.getLocation().getLongitude() + "]\n");
         return sb.toString();
     }
 }
