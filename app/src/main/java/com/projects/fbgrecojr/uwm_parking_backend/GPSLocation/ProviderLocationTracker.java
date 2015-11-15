@@ -12,7 +12,7 @@ public class ProviderLocationTracker implements LocationListener, LocationTracke
     private static final long MIN_UPDATE_DISTANCE = 10;
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_UPDATE_TIME = 1000 * 5;
+    private static final long MIN_UPDATE_TIME = 1000 * 1;
 
     private LocationManager lm;
 
@@ -82,7 +82,10 @@ public class ProviderLocationTracker implements LocationListener, LocationTracke
         if(lastLocation == null){
             return false;
         }
-        if(System.currentTimeMillis() - lastTime > 5 * MIN_UPDATE_TIME){
+        if(System.currentTimeMillis() - lastTime > 5 * 60 * 1000){
+            System.out.println(System.currentTimeMillis());
+            System.out.println(lastTime);
+            System.out.println("STALE");
             return false; //stale
         }
         return true;

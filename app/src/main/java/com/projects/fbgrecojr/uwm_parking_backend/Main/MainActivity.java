@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ import com.projects.fbgrecojr.uwm_parking_backend.Structures.LogItem;
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.Lot;
 import com.projects.fbgrecojr.uwm_parking_backend.Structures.User;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,21 +35,12 @@ public class MainActivity extends AppCompatActivity {
     Button one, two, three, four, five, six;
     TextView screen;
 
-    //holds the current List of Lot Objects. It can be accessed through the entire project by its static getter/setter
-    private static List<Lot> currentLotList = new ArrayList<>();
-    //holds the current User Objects. It can be accessed through the entire project by its static getter/setter
-    private static User currentUser = new User();
-    //holds the current List of LogItem Objects. It can be accessed through the entire project by its static getter/setter
-    private static List<LogItem> currentLog = new ArrayList<>();
-    //holds the current List of Building Objects. It can be accessed through the entire project by its static getter/setter
-    private static List<Building> currentBuildings = new ArrayList<>();
     //create a Progress Dialog to be used throughout Activity
     private ProgressDialog p;
     //URL
     public static String uri = "http://ec2-54-152-4-103.compute-1.amazonaws.com/scripts.php";
     //location
     ProviderLocationTracker tracker;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +60,6 @@ public class MainActivity extends AppCompatActivity {
         one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Location l;
-                if(tracker.hasLocation()){
-                    l = tracker.getLocation();
-                    clearScreen();
-                    updateDisplay("[" + String.valueOf(l.getLatitude()) + ", " + String.valueOf(l.getLongitude()) + "]");
-                }else if(tracker.hasPossiblyStaleLocation()){
-                    l = tracker.getPossiblyStaleLocation();
-                    clearScreen();
-                    updateDisplay("[" + String.valueOf(l.getLatitude()) + ", " + String.valueOf(l.getLongitude()) + "]");
-                }else{
-                    clearScreen();
-                    updateDisplay("tracker is null");
-                }*/
                 if(isOnline()){
                     screen.setText("");
                     //*****FOR EACH CALL TO THE WEBSERVICE, THIS OVERHEAD MUST BE DONE*****
@@ -124,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                     p.setMethod("GET");
                     p.setUri(MainActivity.getUri());
                     p.setParam("query", "log");
-                    p.setParam("username", "fbgrecojr");
-                    p.setParam("day", String.valueOf(formatDay("saturday")));
+                    p.setParam("username", "testuser");
+                    p.setParam("day", String.valueOf(formatDay("sunday")));
                     new WebserviceCallThree().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, p);
                 } else {
                     Toast.makeText(getApplicationContext(), "you are not connected to the internet", Toast.LENGTH_LONG).show();
@@ -193,11 +174,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //ideally call this method when the user initiates parking
         tracker.start(new LocationTracker.LocationUpdateListener() {
             @Override
             public void onUpdate(Location oldLoc, long oldTime, Location newLoc, long newTime) {
-                updateDisplay( tracker.hasLocation() ? ("old: [" + oldLoc.getLatitude() + ", " + oldLoc.getLongitude() + "]") : "no previous location");
-                updateDisplay("new: [" + newLoc.getLatitude() + ", " + newLoc.getLongitude() + "]");
+                NumberFormat formatter = new DecimalFormat("#0.00000");
+                //LOG LOCATION UPDATES TO THE CONSOLE FOR DEBUGGING/REFERENCE
+                Log.i("LOCATION UPDATED", tracker.hasLocation() ? ("old: [" + oldLoc.getLatitude() + ", " + oldLoc.getLongitude() + "]") : "no previous location");
+                Log.i("LOCATION UPDATED", "new: [" + newLoc.getLatitude() + ", " + newLoc.getLongitude() + "]\n");
+                Toast.makeText(MainActivity.this, (tracker.hasLocation() ? ("OLD: [" + formatter.format(oldLoc.getLatitude()) + ", " + formatter.format(oldLoc.getLongitude()) + "]") : "no previous location")
+                        + "\n" + "NEW: [" + formatter.format(newLoc.getLatitude()) + ", " + formatter.format(newLoc.getLongitude()) + "]", Toast.LENGTH_SHORT).show();
+                //this method will be called upon 2 conditions
+                //1. minimum, specified distance is covered
+                //2. minimum, specified time has passed
+                //All that needs to be done here is to call the algorithm
+
+
             }
         });
 
@@ -257,38 +249,6 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static List<Lot> getCurrentLotList() {
-        return currentLotList;
-    }
-
-    public static void setCurrentLotList(List<Lot> currentLotList) {
-        MainActivity.currentLotList = currentLotList;
-    }
-
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setCurrentUser(User currentUser) {
-        MainActivity.currentUser = currentUser;
-    }
-
-    public static List<LogItem> getCurrentLog() {
-        return currentLog;
-    }
-
-    public static void setCurrentLog(List<LogItem> currentLog) {
-        MainActivity.currentLog = currentLog;
-    }
-
-    public static List<Building> getCurrentBuildings() {
-        return currentBuildings;
-    }
-
-    public static void setCurrentBuildings(List<Building> currentBuildings) {
-        MainActivity.currentBuildings = currentBuildings;
-    }
-
     public ProgressDialog getP() {
         return p;
     }
@@ -324,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.controlProgressDialog(false, null, MainActivity.this.getP(), null);
 
             if(s != null){
-                MainActivity.this.setCurrentLotList(s);
+                Session.setCurrentLotList(s);
                 StringBuilder sb = new StringBuilder();
                 for(Lot item : s){
                     sb.append(item.toString() + "\n");
@@ -360,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity.controlProgressDialog(false, null, MainActivity.this.getP(), null);
 
-            MainActivity.this.setCurrentUser(s);
+            Session.setCurrentUser(s);
             updateDisplay(s.toString());
         }
 
@@ -389,7 +349,8 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.controlProgressDialog(false, null, MainActivity.this.getP(), null);
 
             if(s != null){
-                MainActivity.this.setCurrentLog(s);
+                Session.setCurrentLog(s);
+                s = Session.getCurrentLogWithinRange(2, 18, 1);
                 StringBuilder sb = new StringBuilder();
                 for(LogItem item : s){
                     sb.append(item.toString() + "\n");
@@ -451,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.controlProgressDialog(false, null, MainActivity.this.getP(), null);
 
             if(s != null){
-                MainActivity.setCurrentBuildings(s);
+                Session.setCurrentBuildings(s);
                 StringBuilder sb = new StringBuilder();
                 for(Building item : s){
                     sb.append(item.toString() + "\n");

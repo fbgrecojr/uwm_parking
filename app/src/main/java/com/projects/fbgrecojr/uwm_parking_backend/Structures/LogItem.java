@@ -1,11 +1,14 @@
 package com.projects.fbgrecojr.uwm_parking_backend.Structures;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * Created by fbgrecojr on 11/7/15.
  */
 public class LogItem {
 
-    private String time;
+    private GregorianCalendar time;
     private String keyword;
     private int length;
     private String lotName;
@@ -27,11 +30,11 @@ public class LogItem {
         this.length = length;
     }
 
-    public String getTime() {
+    public GregorianCalendar getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(GregorianCalendar time) {
         this.time = time;
     }
 

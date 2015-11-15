@@ -10,8 +10,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -126,7 +131,17 @@ public class JSONParser {
                 curItem.setKeyword(obj.getString("keyword"));
                 curItem.setLength(obj.getInt("length"));
                 curItem.setLotName(obj.getString("lotName"));
-                curItem.setTime(obj.getString("time"));
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try{
+                    Date date = format.parse(obj.getString("time")); // mysql datetime format
+                    GregorianCalendar calendar = new GregorianCalendar();
+                    calendar.setTime(date);
+                    curItem.setTime(calendar);
+                }catch (ParseException e){
+                    e.printStackTrace();
+                    return null;
+                }
 
                 logList.add(curItem);
             }
